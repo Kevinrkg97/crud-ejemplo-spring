@@ -1,45 +1,57 @@
 package com.example.demoCrud.controller;
 
 
-import com.example.demoCrud.models.Users;
-import com.example.demoCrud.service.UsuariosService;
+import com.example.demoCrud.models.Response.ResponseBody;
+import com.example.demoCrud.models.Response.UsersResponse;
+import com.example.demoCrud.models.database.Users;
+import com.example.demoCrud.models.request.UserRequest;
+import com.example.demoCrud.service.UsersService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping(value = "/users")
 @RestController
+@Slf4j
 public class UsuariosController {
 
     @Autowired
-    private UsuariosService usuariosService;
+    private UsersService usersService;
 
-    @PostMapping("/add")
-    public String add(@RequestBody Users user) {
+@PostMapping("/add")
+    public ResponseEntity<Object> add(@RequestBody UserRequest user) {
 
-        String response = usuariosService.addUser(user);
+        String requestId = UUID.randomUUID().toString();
+        log.info("Add Users Service " + requestId + " " + user.toString());
 
-        return response;
+        ResponseBody response = usersService.addUser(user, requestId);
+
+        if(response == null){
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/getUsers")
     public List<Users> getUsers() {
 
-        List<Users> response = usuariosService.getUsers();
 
-        return response;
+        return null;
     }
 
     @DeleteMapping ("/deleteUser/{id}")
     public String delete (@PathVariable Long id) {
-        String deleteUser = usuariosService.deleteUser(id);
-        return deleteUser;
+        return null;
     }
     @PutMapping ("/updateUser/{id}")
     public String update (@PathVariable int id, @RequestBody Users user) {
-        user.setId(id);
-        String updateUser = usuariosService.updateUser(user);
-        return updateUser;
+
+        return null;
     }
 }
